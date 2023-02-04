@@ -20,7 +20,7 @@ mongoose.connect(db , {useNewUrlParser : true})
 const productRoutes = require('./API/routes/products') ; 
 const orderRoutes = require('./API/routes/orders') ;
 
-
+app.use('/uploads/'  , express.static('uploads')) ; 
 app.use(bodyParser.urlencoded({extended: false})) ; 
 app.use(bodyParser.json()) ; 
 
