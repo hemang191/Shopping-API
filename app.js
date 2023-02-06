@@ -19,6 +19,8 @@ mongoose.connect(db , {useNewUrlParser : true})
 
 const productRoutes = require('./API/routes/products') ; 
 const orderRoutes = require('./API/routes/orders') ;
+const userRoutes = require('./API/routes/user') ; 
+
 
 app.use('/uploads/'  , express.static('uploads')) ; 
 app.use(bodyParser.urlencoded({extended: false})) ; 
@@ -40,15 +42,18 @@ app.use((req , res , next)=>
 
     next() ; 
 })
+
+
 app.use('/products' , productRoutes) ; 
 app.use('/orders' , orderRoutes) ; 
+app.use('/users' , userRoutes) ; 
 
 // here this middleware handles the request for routes not present
 app.use((req , res , next)=>
 {
     const error = new Error('Not found') ; 
   
-    error.status(404) ; 
+    res.status(404) ; 
     next(error) ;
 });
 
@@ -56,7 +61,7 @@ app.use((req , res , next)=>
 // here this middleware handles the request for the db errors and others one 
 app.use((error , req , res , next) =>
 {
-    res.status(error.status || 500);
+    res.status( 500);
     res.json({
         error:{
             message : error.message 

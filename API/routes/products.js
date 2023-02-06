@@ -2,7 +2,7 @@ const express = require('express') ;
 const router = express.Router() ; 
 const mongoose = require('mongoose') ; 
 const multer = require('multer') ; 
-
+const check_auth = require('../middleware/check-auth') ; 
 // now for viewing the image in browser there are two possiblities 
 
 // 1---> make a different router 
@@ -82,7 +82,8 @@ router.get('/' , (req , res , next)=>
     })
 })
 
-router.post('/'  , upload.single('productImage') , (req, res , next)=>
+// here upload.single parse the form data which we are passing so either use check_auth middleware after it aur pass the token value into header
+router.post('/'  , check_auth , upload.single('productImage') , (req, res , next)=>
 {
     console.log(req.file) ; 
     const product = new Product({
@@ -120,7 +121,7 @@ router.post('/'  , upload.single('productImage') , (req, res , next)=>
         
 })
 
-router.get('/:productId ', (req , res , next)=>
+router.get('/:productId ', check_auth ,  (req , res , next)=>
 {
     const id = req.params.productId; 
     console.log(id) ; 
@@ -143,18 +144,22 @@ router.get('/:productId ', (req , res , next)=>
                     }
                 ) ;
             }
+            else {
+                res.status(404)
+                .json({message : "No valid entry found for ID"});
+            }
             
        })
        .catch(err => {
             console.log(err);
-            res.status(500).json({error : 'hi'});
+            res.status(500).json({error : err});
        }) ; 
             
          
 
 })
 
-router.patch('/:productId' , (req , res , next)=>
+router.patch('/:productId', check_auth , (req , res , next)=>
 {
     const id = req.params.productId ; 
     const update = {} ; 
@@ -183,7 +188,7 @@ router.patch('/:productId' , (req , res , next)=>
        });
 })
 
-router.delete('/:productId' , (req , res , next)=>
+router.delete('/:productId' , check_auth , (req , res , next)=>
 {
     const id = req.params.productId; 
     Product.remove({_id : id})

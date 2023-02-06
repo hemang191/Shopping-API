@@ -4,8 +4,11 @@ const mongoose = require('mongoose') ;
 
 const Order = require('../models/order') ; 
 const Product = require('../models/product') ; 
+const check_auth = require('../middleware/check-auth') ; 
 
-router.get('/' , (req , res , next)=>
+
+
+router.get('/' , check_auth ,  (req , res , next)=>
 {
     /*Order.find()
     .select('-__v')
@@ -63,7 +66,7 @@ router.get('/' , (req , res , next)=>
         });
 });
 
-router.post('/', (req , res ,next)=>
+router.post('/', check_auth , (req , res ,next)=>
 {
     // first of all check that product exist or not for which order is going to place 
     Product.findById(req.body.productId)
@@ -104,7 +107,7 @@ router.post('/', (req , res ,next)=>
     
 });
 
-router.get('/:orderId' , (req, res , next)=>
+router.get('/:orderId' , check_auth , (req, res , next)=>
 {
     // check whether orderId is valid or not 
     Order.findById(req.params.orderId)
@@ -134,7 +137,7 @@ router.get('/:orderId' , (req, res , next)=>
        
 });
 
-router.delete('/:orderId' , (req, res , next)=>
+router.delete('/:orderId' ,  check_auth , (req, res , next)=>
 {
     Order.remove({_id : req.params.orderId})
     .exec()
