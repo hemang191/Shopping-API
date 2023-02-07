@@ -9,17 +9,17 @@ const check_auth = require('../middleware/check-auth') ;
 
 // 2 --> make folder view static (publically available )
 
-/* storage strategy in multer 
+// storage strategy in multer 
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
-      cb(null, '.uploads/');
+      cb(null, 'uploads/');
     },
     filename: function(req, file, cb) {
       const  name = new Date().toISOString() + file.fieldname ; 
       cb(null, name);
     }
   });
-*/
+
 
 //const upload = multer ({storage: storage});
 
@@ -39,7 +39,7 @@ const fileFilter  = (req , file , cb)=>
     
 };
 
-const upload = multer({dest : 'uploads/' ,
+const upload = multer({storage : storage ,
  limits:
 {
     fileSize : 1024 * 1024 * 5 // upto 5mb can store
